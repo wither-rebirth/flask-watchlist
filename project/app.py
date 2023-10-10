@@ -44,7 +44,7 @@ def index():
         year = request.form.get('year')
         #验证数据
         if not title or not year or len(year) > 4 or len(title) > 60:
-            flash('Invalid input') #显示错误提示
+            flash('Invalid input.') #显示错误提示
             return redirect(url_for('index')) #重定向回主页
         #保存表单数据到数据库
         movie = Movie(title=title, year=year) #创建记录
@@ -63,14 +63,14 @@ def login():
         password = request.form['password']
         
         if not username or not password:
-            flash('Invalid input')
+            flash('Invalid input.')
             return redirect(url_for('login'))
         
         user= User.query.first()
         #验证用户名和密码是否一致
         if username == user.username and user.validate_password(password):
             login_user(user) #登入用户
-            flash('Login success')
+            flash('Login success.')
             return redirect(url_for('index')) #重定向到主页
         
         flash('Invalid username or password.') #如果验证失败，显示错误信息
@@ -82,7 +82,7 @@ def login():
 @login_required #用于视图保护，后面会详细介绍
 def logout():
     logout_user() #登出用户
-    flash('Goodbye')
+    flash('Goodbye.')
     return redirect(url_for('index')) #重定向回首页
 
 @app.route('/movie/edit/<int:movie_id>', methods=['GET', 'POST'])
@@ -95,13 +95,13 @@ def edit(movie_id):
         year = request.form['year']
         
         if not title or not year or len(year) != 4 or len(title) >60:
-            flash('Invalid input')
+            flash('Invalid input.')
             return redirect(url_for('edit', movie_id=movie_id)) #重定向回对应的编辑页面
         
         movie.title = title #更新标题
         movie.year = year #更新年份
         db.session.commit() #提交数据库会话
-        flash('Item update.')
+        flash('Item updated.')
         return redirect(url_for('index')) #重定向会主页
     
     return render_template('edit.html', movie = movie) #传入被编辑的电影记录
@@ -138,7 +138,7 @@ def settings():
         name = request.form['name']
         
         if not name or len(name) > 20:
-            flash('Invalid input')
+            flash('Invalid input.')
             return redirect(url_for('settings'))
         
         current_user.name = name
@@ -147,7 +147,7 @@ def settings():
         #user = User.query.first()
         #user.name = name
         db.session.commit()
-        flash('Settings update')
+        flash('Settings updated.')
         return redirect(url_for('index'))
     return render_template('settings.html')
 
@@ -177,7 +177,7 @@ def forge():
         movie = Movie(title=m['title'], year=m['year'])
         db.session.add(movie)
     db.session.commit()
-    click.echo('Done')
+    click.echo('Done.')
     
 class User(db.Model, UserMixin):
     id= db.Column(db.Integer, primary_key=True)
@@ -226,7 +226,7 @@ def admin(username, password):
         db.session.add(user)
     
     db.session.commit() #提交数据库会话
-    click.echo('Done')
+    click.echo('Done.')
 
 @login_manager .user_loader
 def load_user(user_id): #创建用户加载回调函数，接受用户ID作为参数
